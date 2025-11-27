@@ -1,45 +1,45 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: #a5bde2;   /* Azul muy claro para todo el fondo */
-  }
-  
-  header {
-    background: #142a7a;   /* Azul marino intenso */
-    color: #9ab3e0;        /* Azul claro para contraste */
-    padding: 1em;
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .products {
-    display: flex;
-    gap: 20px;
-    padding: 20px;
-  }
-  
-  .product {
-    border: 1px solid #8dabd1; /* Azul grisáceo suave */
-    padding: 10px;
-    text-align: center;
-    background: #f0f8ff;       /* Azul muy claro dentro de cada tarjeta */
-  }
-  
-  button {
-    background: #1e3a8a;   /* Azul fuerte */
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background: #2563eb;   /* Azul brillante al pasar el mouse */
-  }
-  
-  #cart-items {
-    padding: 20px;
-    background: #dbeafe;   /* Azul pastel para el carrito */
-  }
-  
+ body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #0f172a;   /* Azul muy oscuro, elegante */
+  color: #e2e8f0;        /* Texto claro para contraste */
+}
+
+header {
+  background: #1e293b;   /* Azul grisáceo profundo */
+  color: #cbd5e1;        /* Gris claro para contraste elegante */
+  padding: 1em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.products {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+.product {
+  border: 1px solid #334155; /* Gris azulado sobrio */
+  padding: 10px;
+  text-align: center;
+  background: #f8fafc;       /* Fondo casi blanco para destacar */
+}
+
+button {
+  background: #1e3a8a;   /* Azul fuerte */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #2563eb;   /* Azul brillante al pasar el mouse */
+}
+
+#cart-items {
+  padding: 20px;
+  background: #e2e8f0;   /* Gris claro para el carrito */
+}
