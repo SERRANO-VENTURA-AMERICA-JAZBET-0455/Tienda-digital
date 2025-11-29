@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Nova stark</title>
+  <link rel="stylesheet" href="stiles.css"/>
+</head>
+<body>
+  <!-- Encabezado del sitio -->
+  <header class="site-header">
+    <h1 class="brand">Nova stark</h1>
+
+    <!-- Navegación por categorías -->
+    <nav class="top-nav" id="categoryNav" aria-label="Categorías"></nav>
+
+    <!-- Acciones rápidas -->
+    <div class="actions">
+      <label for="search" class="visually-hidden">Buscar productos</label>
+      <input id="search" type="search" placeholder="Buscar productos…" aria-label="Buscar productos"/>
+
+      <!-- Botón del carrito -->
+      <button id="cartToggle" class="cart-button" aria-expanded="false" aria-controls="cartPanel">
+        🛒 Carrito (<span id="cartCount">0</span>)
+      </button>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="container">
+    <!-- Loader opcional mientras se cargan productos -->
+    <div id="loader" class="loader" hidden>Cargando productos...</div>
+
+    <!-- Contenedor dinámico de productos -->
+    <section id="products" class="grid" aria-live="polite"></section>
+  </main>
+
+  <!-- Panel lateral del carrito -->
+  <aside id="cartPanel" class="cart-panel" aria-hidden="true" tabindex="-1">
+    <div class="cart-header">
+      <h2>Tu carrito</h2>
+      <button id="closeCart" aria-label="Cerrar carrito">✕</button>
+    </div>
+
+    <!-- Lista dinámica de artículos -->
+    <div id="cartItems" class="cart-items" role="list"></div>
+
+    <!-- Pie del carrito -->
+    <div class="cart-footer">
+      <div class="totals">
+        <span>Subtotal:</span>
+        <strong id="cartSubtotal">$0.00</strong>
+      </div>
+      <button id="checkoutBtn" class="primary">Pagar</button>
+    </div>
+  </aside>
+
+  <!-- Pie de página -->
+  <footer class="site-footer">
+    <small>
+      Proyecto demo con catálogo embebido — funciona con <code>file://</code>  
+      | <a href="#">Política de privacidad</a> | <a href="#">Contacto</a>
+    </small>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="catalogo.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
