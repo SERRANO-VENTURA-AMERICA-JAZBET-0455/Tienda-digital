@@ -1,12 +1,12 @@
- // Catálogo friki para la tienda
-window.catalogodata = {
+  // Catálogo para la tienda
+ window.catalogData = {
     products: [
       {
         id: "f1",
         name: "Figura Funko Pop: Goku",
         price: 399,
         category: "coleccionables",
-        image: "https://via.placeholder.com/150?text=Goku",
+        image: "",
         stock: 20,
         description: "Figura coleccionable Funko Pop de Goku Super Saiyan.",
         rating: 4.8,
@@ -30,7 +30,7 @@ window.catalogodata = {
         name: "Manga: Naruto Vol. 1",
         price: 249,
         category: "lectura",
-        image: "https://via.placeholder.com/150?text=Naruto",
+        image: "https://www.google.com/url?sa=i&url=https%3A%2F%2Faminoapps.com%2Fc%2Fnaruto_official%2Fpage%2Fblog%2Fresena-manga-naruto-vol-1-cap-1%2F5pmV_v6iVuLKagmarX0JWjr0wpvvDavP27&psig=AOvVaw3CaMjyXsZ5SpjyxZWSAD5z&ust=1764707473301000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCNDE-56hnZEDFQAAAAAdAAAAABAE",
         stock: 15,
         description: "Primer volumen del manga clásico Naruto.",
         rating: 4.9,
@@ -42,7 +42,7 @@ window.catalogodata = {
         name: "Mouse Gamer RGB",
         price: 899,
         category: "electronicos",
-        image: "https://via.placeholder.com/150?text=Mouse+Gamer",
+        image: " https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.amazon.com.mx%2Fsilencioso-Ajustable-computadora-ergon%25C3%25B3mico-Ultraligero%2Fdp%2FB0BVMPWC3B&psig=AOvVaw0MWNwC79IPz1XVhUFYzgGP&ust=1764707577205000&source=images&cd=vfe&opi=89978449&ved=0CBUQjRxqFwoTCNjozYShnZEDFQAAAAAdAAAAABAE",
         stock: 25,
         description: "Mouse gamer con luces RGB y alta precisión.",
         rating: 4.7,
@@ -54,7 +54,7 @@ window.catalogodata = {
         name: "Sudadera Star Wars",
         price: 699,
         category: "ropa",
-        image: "https://via.placeholder.com/150?text=Star+Wars",
+        image: " https://nacionfit.mx/cdn/shop/files/e73cfce9-ad7a-4402-8e02-31c493cf9eb7.jpg?v=1739842147",
         stock: 30,
         description: "Sudadera con diseño clásico de Star Wars.",
         rating: 4.5,
@@ -63,22 +63,22 @@ window.catalogodata = {
       },
       {
         id: "f6",
-        name: "Poster Attack on Titan",
+        name: "Poster Spiderman",
         price: 199,
         category: "decoracion",
-        image: "https://via.placeholder.com/150?text=AOT",
+        image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSpc4QwkHkc15CeCl0tBWggsx7eumiUDVVMig&s ",
         stock: 40,
         description: "Poster oficial de Attack on Titan.",
         rating: 4.4,
         brand: "Kodansha",
-        tags: ["anime", "poster", "decoracion"]
+        tags: ["superheroes", "poster", "decoracion"]
       },
       {
         id: "f7",
         name: "Control Retro NES",
         price: 499,
         category: "electronicos",
-        image: "https://via.placeholder.com/150?text=NES",
+        image: " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTpg2-T6TPM2xlIfxuk_y2OmDfD9KkxL2Za7Q&s  ",
         stock: 18,
         description: "Control clásico estilo NES compatible con PC.",
         rating: 4.3,
@@ -90,7 +90,7 @@ window.catalogodata = {
         name: "Libro: Historia de Marvel",
         price: 599,
         category: "lectura",
-        image: "https://via.placeholder.com/150?text=Marvel",
+        image: "https://images.cdn2.buscalibre.com/fit-in/360x360/a1/2b/a12b6fba842f64e577db93e282bb4f03.jpg",
         stock: 10,
         description: "Libro ilustrado sobre la historia de Marvel Comics.",
         rating: 4.7,
@@ -99,22 +99,22 @@ window.catalogodata = {
       },
       {
         id: "f9",
-        name: "Figura Funko Pop: Darth Vader",
+        name: "Figura Funko Pop: Ichigo kurosaki",
         price: 429,
         category: "coleccionables",
-        image: "https://via.placeholder.com/150?text=Darth+Vader",
+        image: " https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZeVnJus3ndrkGwAVKOvNAEZggNTmT1qnptw&s",
         stock: 22,
         description: "Funko Pop del icónico Darth Vader con sable de luz.",
         rating: 4.9,
         brand: "Funko",
-        tags: ["star wars", "coleccionables", "funko"]
+        tags: ["bleach", "coleccionables", "funko"]
       },
       {
         id: "f10",
         name: "Playera Pokémon Pikachu",
         price: 279,
         category: "ropa",
-        image: "https://via.placeholder.com/150?text=Pikachu",
+        image: "https://m.media-amazon.com/images/I/51M2VAqmujL._AC_.jpg",
         stock: 40,
         description: "Playera amarilla con diseño de Pikachu.",
         rating: 4.6,
