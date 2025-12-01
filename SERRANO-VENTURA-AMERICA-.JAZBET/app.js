@@ -1,218 +1,257 @@
-
   /* =====================================================
-   Tienda Nova Estrella
-   - Muestra productos y categorías desde un catálogo
-   - Permite buscar y filtrar
-   - Incluye un carrito básico para simular compras
+   Tienda Avanzada - sin servidor
+   Este archivo hace que la tienda funcione:
+   - Muestra los productos que están guardados en otro archivo.
+   - Permite buscar y filtrar productos por categoría.
+   - Tiene un carrito que recuerda lo que agregaste,
+     incluso si cierras la página y vuelves.
+   - Puedes sumar, restar, quitar productos y ver el total.
+   - Muestra avisos rápidos cuando agregas algo.
    ===================================================== */
+(function(){
+  'use strict';
 
-   (function(){
-    'use strict';
-  
-    // Esperamos a que la página esté lista antes de empezar
-    document.addEventListener('DOMContentLoaded', init);
-  
-    // Atajos para encontrar elementos en la página
-    const $ = (s,r=document)=>r.querySelector(s);
-    const $all = (s,r=document)=>r.querySelectorAll(s);
+  // Cuando la página ya está lista, se arranca todo
+  document.addEventListener('DOMContentLoaded', init);
 
-    // Convierte números en formato de dinero mexicano
-    const money = n => Number(n||0).toLocaleString('es-MX',{style:'currency',currency:'MXN'});
-  
-    // Aquí guardamos todo lo que la tienda necesita recordar
-    let state = {
-      catalog: [],   // Lista completa de productos
-      filtered: [],  // Lista filtrada (según búsqueda/categoría)
-      cart: [],      // Carrito con productos elegidos
-      category: 'all', // Categoría seleccionada
-      search: ''       // Texto de búsqueda
-    };
-  
-    function init(){
-      // Guardamos referencias a las partes importantes de la página
-      const productsEl     = $('#products');
-      const searchEl       = $('#search');
-      const categoryNav    = $('#categoryNav');
-      const cartToggleBtn  = $('#cartToggle');
-      const cartPanel      = $('#cartPanel');
-      const closeCartBtn   = $('#closeCart');
-      const cartItemsEl    = $('#cartItems');
-      const cartCountEl    = $('#cartCount');
-      const cartSubtotalEl = $('#cartSubtotal');
-      const checkoutBtn    = $('#checkoutBtn');
-  
-      // Revisamos si existe el catálogo de productos
-      if(!window.catalogData){
-        productsEl.innerHTML = '<p>No se pudo cargar el catálogo.</p>';
-        return;
-      }
-      state.catalog = window.catalogData.products || [];
-  
-      // Mostramos categorías y productos al inicio
-      buildCategories(categoryNav, state.catalog);
-      state.filtered = [...state.catalog];
-      renderProducts(productsEl, state.filtered);
-      renderCart(cartItemsEl, cartCountEl, cartSubtotalEl);
-  
-      // Cuando alguien escribe en la búsqueda, filtramos productos
-      searchEl?.addEventListener('input', ()=>{
-        state.search = searchEl.value.trim().toLowerCase();
-        applyFilters(productsEl);
-      });
-  
-      // Cuando alguien hace clic en una categoría, filtramos productos
-      categoryNav.addEventListener('click', e=>{
-        const btn = e.target.closest('.nav-btn');
-        if(!btn) return;
-        state.category = btn.dataset.filter;
-        $all('.nav-btn', categoryNav).forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        applyFilters(productsEl);
-      });
-  
-      // Cuando alguien da clic en "Agregar", metemos el producto al carrito
-      productsEl.addEventListener('click', e=>{
-        const btn = e.target.closest('.add-btn');
-        if(!btn) return;
-        const card = btn.closest('.card');
-        addToCart(state.catalog.find(p=>p.id === card.dataset.id));
-        openCart();
-      });
-  
-      // Funciones para abrir y cerrar el carrito
-      function openCart(){
-        cartPanel.classList.add('open');
-        cartToggleBtn?.setAttribute('aria-expanded','true');
-      }
-      function closeCartFn(){
-        cartPanel.classList.remove('open');
-        cartToggleBtn?.setAttribute('aria-expanded','false');
-      }
-      cartToggleBtn?.addEventListener('click', ()=> cartPanel.classList.toggle('open'));
-      closeCartBtn?.addEventListener('click', closeCartFn);
-      document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeCartFn(); });
-  
-      // Dentro del carrito: botones para sumar, restar o quitar productos
-      cartItemsEl.addEventListener('click', e=>{
-        const btn = e.target.closest('button');
-        if(!btn) return;
-        const {id,action} = btn.dataset;
-  
-        if(action==='inc')  changeQty(id,1);   // sumar cantidad
-        if(action==='dec')  changeQty(id,-1);  // restar cantidad
-        if(action==='remove') removeFromCart(id); // quitar producto
-  
-        renderCart(cartItemsEl, cartCountEl, cartSubtotalEl);
-      });
-  
-      // Botón de pagar (solo muestra un mensaje y limpia el carrito)
-      checkoutBtn?.addEventListener('click', ()=>{
-        if(!state.cart.length) return alert('Carrito vacío.');
-        const total = state.cart.reduce((t,i)=>t+i.price*i.qty,0);
-        alert('Gracias por tu compra!\nTotal: '+money(total));
-        state.cart = [];
-        renderCart(cartItemsEl, cartCountEl, cartSubtotalEl);
-        closeCartFn();
-      });
-  
-      /* ====== Funciones ====== */
-  
-      // Crear botones de categorías según el catálogo
-      function buildCategories(nav, catalog){
-        const cats = [...new Set(catalog.map(p=>p.category))].sort();
-        nav.innerHTML = `<button class="nav-btn active" data-filter="all">Todo</button>`;
-        cats.forEach(c=>{
-          nav.innerHTML += `<button class="nav-btn" data-filter="${c}">${cap(c)}</button>`;
-        });
-      }
-  
-      // Mostrar productos en la página
-      function renderProducts(container, list){
-        if(!list.length){
-          container.innerHTML = '<p>No hay productos.</p>';
-          return;
-        }
-        container.innerHTML = list.map(p=>`
-          <article class="card" data-id="${p.id}">
-            <img src="${p.image}" alt="${esc(p.name)}">
-            <div class="card-body">
-              <h3>${esc(p.name)}</h3>
-              <p class="price">${money(p.price)}</p>
-              <button class="add-btn">Agregar</button>
-            </div>
-          </article>
-        `).join('');
-      }
-  
-      // Filtrar productos según categoría y texto de búsqueda
-      function applyFilters(container){
-        let list = state.catalog;
-  
-        if(state.category !== 'all')
-          list = list.filter(p=>p.category===state.category);
-  
-        if(state.search)
-          list = list.filter(p=>p.name.toLowerCase().includes(state.search));
-  
-        state.filtered = list;
-        renderProducts(container, list);
-      }
-  
-      // Carrito: agregar producto
-      function addToCart(p){
-        let item = state.cart.find(i=>i.id===p.id);
-        if(item) item.qty++;
-        else state.cart.push({id:p.id,name:p.name,price:p.price,qty:1});
-        renderCart(cartItemsEl, cartCountEl, cartSubtotalEl);
-      }
-  
-      // Carrito: quitar producto
-      function removeFromCart(id){
-        state.cart = state.cart.filter(i=>i.id!=id);
-      }
-  
-      // Carrito: cambiar cantidad
-      function changeQty(id, d){
-        const it = state.cart.find(i=>i.id==id);
-        if(!it) return;
-        it.qty += d;
-        if(it.qty<=0) removeFromCart(id);
-      }
-  
-      // Mostrar carrito y subtotal
-      function renderCart(container, countEl, subtotalEl){
-        container.innerHTML = '';
-        let subtotal = 0;
-  
-        state.cart.forEach(it=>{
-          subtotal += it.price * it.qty;
-          container.innerHTML += `
-            <div class="cart-item">
-              <div>
-                <p class="item-title">${esc(it.name)}</p>
-                <small>${money(it.price)} c/u</small>
-              </div>
-              <div class="item-controls">
-                <button data-action="dec" data-id="${it.id}">−</button>
-                <span class="qty">${it.qty}</span>
-                <button data-action="inc" data-id="${it.id}">+</button>
-                <button data-action="remove" data-id="${it.id}">Quitar</button>
-              </div>
-            </div>
-          `;
-        });
-  
-        // Actualizamos número de productos y total
-        countEl.textContent = state.cart.reduce((a,b)=>a+b.qty,0);
-        subtotalEl.textContent = money(subtotal);
-      }
-  
-      // Funciones pequeñas de ayuda
-      const cap = s => s.charAt(0).toUpperCase()+s.slice(1); // poner mayúscula inicial
-      const esc = s => String(s).replace(/[&<>"]/g, m=>({
-        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'
-      }[m])); // evitar caracteres raros
+  // ==== Atajos para escribir menos ====
+  // $ busca un solo elemento en la página
+  function $(s,root){ return (root||document).querySelector(s); }
+  // $all busca varios elementos a la vez
+  function $all(s,root){ return (root||document).querySelectorAll(s); }
+  // money convierte números en dinero con formato mexicano
+  const money = (n)=> Number(n||0).toLocaleString('es-MX',{style:'currency',currency:'MXN'});
+
+  // Aquí guardamos el "estado" de la tienda, como una libreta
+  let state = {
+    catalog: [],   // todos los productos disponibles
+    filtered: [],  // los productos que se muestran según búsqueda/filtro
+    cart: [],      // lo que el cliente ha agregado al carrito
+    category: 'all', // categoría seleccionada
+    search: ''       // texto que el cliente escribió para buscar
+  };
+
+  function init(){
+    // Guardamos referencias a las partes importantes de la página
+    const productsEl     = $('#products');
+    const searchEl       = $('#search');
+    const categoryNav    = $('#categoryNav');
+    const cartToggleBtn  = $('#cartToggle');
+    const cartPanel      = $('#cartPanel');
+    const closeCartBtn   = $('#closeCart');
+    const cartItemsEl    = $('#cartItems');
+    const cartCountEl    = $('#cartCount');
+    const cartSubtotalEl = $('#cartSubtotal');
+    const checkoutBtn    = $('#checkoutBtn');
+    const notifyEl       = $('#notify'); // cajita de mensajes rápidos
+
+    if(!productsEl || !categoryNav || !cartPanel) return;
+
+    // --- 1) Cargar catálogo ---
+    // Aquí intentamos leer la lista de productos desde catalog.js
+    try{
+      state.catalog = Array.isArray(window.catalogData?.products)
+        ? window.catalogData.products : [];
+    }catch{
+      productsEl.innerHTML = '<p>No se pudo cargar el catálogo.</p>';
+      return;
     }
-  })();
 
-  
+    // --- 2) Recuperar carrito guardado ---
+    // Si el cliente ya había agregado cosas antes, las recordamos
+    try{
+      const saved = localStorage.getItem('cart');
+      if(saved) state.cart = JSON.parse(saved);
+    }catch{ /* si falla, no pasa nada */ }
+
+    // --- 3) Mostrar todo al inicio ---
+    buildCategories(categoryNav, state.catalog);
+    state.filtered = state.catalog.slice();
+    renderProducts(productsEl, state.filtered);
+    renderCart(cartItemsEl, cartCountEl, cartSubtotalEl);
+
+    // --- 4) Búsqueda ---
+    // Cada vez que el cliente escribe algo, filtramos los productos
+    if(searchEl){
+      searchEl.addEventListener('input', ()=>{
+        state.search = (searchEl.value||'').trim().toLowerCase();
+        applyFilters(productsEl);
+      });
+    }
+
+    // --- 5) Categorías ---
+    // Cuando el cliente hace clic en una categoría, mostramos solo esos productos
+    categoryNav.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.nav-btn');
+      if(!btn) return;
+      state.category = btn.dataset.filter || 'all';
+      $all('.nav-btn', categoryNav).forEach(el=>el.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters(productsEl);
+    });
+
+    // --- 6) Agregar al carrito ---
+    // Si el cliente da clic en "Agregar", metemos ese producto al carrito
+    productsEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.add-btn');
+      if(!btn) return;
+      const card = btn.closest('.card');
+      const id   = card.dataset.id;
+      const found = state.catalog.find(p=>p.id===id);
+      if(found){ addToCart(found); openCart(); showNotify(`Agregado: ${found.name}`); }
+    });
+
+    // --- 7) Panel carrito ---
+    // Abrir y cerrar el carrito como una ventana lateral
+    function openCart(){ cartPanel.classList.add('open'); }
+    function closeCart(){ cartPanel.classList.remove('open'); }
+    cartToggleBtn?.addEventListener('click', ()=> cartPanel.classList.toggle('open'));
+    closeCartBtn?.addEventListener('click', closeCart);
+
+    // --- 8) Controles dentro del carrito ---
+    // Aquí se manejan los botones de +, -, y quitar
+    cartItemsEl.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button'); if(!btn) return;
+      const {id, action} = btn.dataset;
+      if(action==='inc') changeQty(id,+1);
+      else if(action==='dec') changeQty(id,-1);
+      else if(action==='remove') removeFromCart(id);
+      renderCart(cartItemsEl, cartCountEl, cartSubtotalEl);
+    });
+
+    // --- 9) Pagar ---
+    // Cuando el cliente da clic en pagar, mostramos el total y vaciamos el carrito
+    checkoutBtn?.addEventListener('click', ()=>{
+      if(!state.cart.length){ alert('Tu carrito está vacío.'); return; }
+      const total = state.cart.reduce((s,it)=>s+it.price*it.qty,0);
+      alert('Gracias por tu compra!\nTotal: ' + money(total));
+      state.cart = [];
+      saveCart();
+      renderCart(cartItemsEl, cartCountEl, cartSubtotalEl);
+      closeCart();
+    });
+
+    // ====== Funciones ======
+
+    // Crear los botones de categorías
+    function buildCategories(container, catalog){
+      const cats = Array.from(new Set(catalog.map(p=>p.category))).sort();
+      container.innerHTML='';
+      const allBtn = document.createElement('button');
+      allBtn.className='nav-btn active'; allBtn.dataset.filter='all'; allBtn.textContent='Todo';
+      container.appendChild(allBtn);
+      cats.forEach(cat=>{
+        const b=document.createElement('button');
+        b.className='nav-btn'; b.dataset.filter=cat; b.textContent=capitalize(cat);
+        container.appendChild(b);
+      });
+    }
+
+    // Mostrar los productos en la página
+    function renderProducts(container, list){
+      container.innerHTML='';
+      list.forEach(p=>{
+        const card=document.createElement('article');
+        card.className='card'; card.dataset.id=p.id;
+        card.innerHTML=`
+          <img src="${p.image}" alt="${escapeHtml(p.name)}">
+          <div class="card-body">
+            <h3>${escapeHtml(p.name)}</h3>
+            <p class="price">${money(p.price)}</p>
+            <button class="add-btn">Agregar</button>
+          </div>`;
+        container.appendChild(card);
+      });
+      if(!list.length) container.innerHTML='<p>No hay productos para mostrar.</p>';
+    }
+
+    // Aplicar filtros de categoría y búsqueda
+    function applyFilters(container){
+      const byCat = state.category==='all' ? state.catalog : state.catalog.filter(p=>p.category===state.category);
+      const byText = state.search ? byCat.filter(p=>(p.name||'').toLowerCase().includes(state.search)) : byCat;
+      state.filtered = byText;
+      renderProducts(container, state.filtered);
+    }
+
+    // Agregar producto al carrito
+    function addToCart(prod){
+      const f = state.cart.find(i=>i.id===prod.id);
+      if(f) f.qty += 1; else state.cart.push({id:prod.id,name:prod.name,price:prod.price,qty:1});
+      saveCart();
+      renderCart(cartItemsEl, cartCountEl, cartSubtotalEl);
+    }
+
+    // Quitar producto del carrito
+    function removeFromCart(id){ state.cart = state.cart.filter(i=>i.id!=id); saveCart(); }
+
+    // Cambiar cantidad de un producto
+    function changeQty(id,delta){ 
+      const it=state.cart.find(i=>i.id==id); 
+      if(!it) return; 
+      it.qty+=delta; 
+      if(it.qty<=0) removeFromCart(id); 
+      saveCart(); 
+    }
+
+         // Mostrar el carrito en pantalla
+    function renderCart(container,countEl,subtotalEl){
+      container.innerHTML='';
+      let subtotal=0;
+
+      // Recorremos cada producto que está en el carrito
+      state.cart.forEach(it=>{
+        subtotal+=it.price*it.qty; // sumamos el precio por la cantidad
+
+        // Creamos la fila que se verá en el carrito
+        const row=document.createElement('div');
+        row.className='cart-item';
+        row.innerHTML=`
+          <div>
+            <p class="item-title">${escapeHtml(it.name)}</p>
+            <small>${money(it.price)} c/u</small>
+          </div>
+          <div class="item-controls">
+            <button class="qty-btn" data-action="dec" data-id="${it.id}">−</button>
+            <span class="qty">${it.qty}</span>
+            <button class="qty-btn" data-action="inc" data-id="${it.id}">+</button>
+            <button class="remove-btn" data-action="remove" data-id="${it.id}">Quitar</button>
+          </div>`;
+        container.appendChild(row);
+      });
+
+      // Actualizamos el número de productos y el total
+      countEl.textContent=String(state.cart.reduce((a,b)=>a+b.qty,0));
+      subtotalEl.textContent=money(subtotal);
+    }
+
+    // Guardar carrito en la memoria del navegador
+    // (esto hace que aunque cierres la página, al volver siga tu carrito)
+    function saveCart(){ 
+      try{ localStorage.setItem('cart', JSON.stringify(state.cart)); }
+      catch{} 
+    }
+
+    // Mostrar un aviso rápido (ejemplo: "Agregado: Producto X")
+    function showNotify(msg){
+      if(!notifyEl) return;
+      notifyEl.textContent=msg;
+      notifyEl.classList.add('show');
+      setTimeout(()=>notifyEl.classList.remove('show'),2000);
+    }
+
+    // Poner la primera letra en mayúscula
+    function capitalize(s){ 
+      return (s||'').charAt(0).toUpperCase()+(s||'').slice(1); 
+    }
+
+    // Evitar que se metan caracteres raros en los textos
+    function escapeHtml(str){ 
+      return String(str||'')
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;')
+        .replace(/'/g,'&#39;'); 
+    }
+  }
+})();
