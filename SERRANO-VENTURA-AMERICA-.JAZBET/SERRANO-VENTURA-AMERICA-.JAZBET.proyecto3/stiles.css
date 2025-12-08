@@ -1,0 +1,267 @@
+ /* ==========================================================
+   ✨ TIENDA AVANZADA — ESTILO PRO
+   - Mejor detalle visual
+   - Cards modernas con animación
+   - Hover con profundidad 3D suave
+   - Glassmorphism más limpio
+   - Controles más visibles
+========================================================== */
+
+/* ===== Variables ===== */
+:root{
+  --bg: #0b0f14;
+  --bg-alt: rgba(255,255,255,0.04);
+  --text: #e6f1ff;
+  --muted: #9fb3c8;
+  --primary: #00f5ff;
+  --secondary: #7c4dff;
+  --success: #00ffa3;
+
+  --radius: 16px;
+  --radius-sm: 10px;
+
+  --shadow: 0 8px 20px rgba(0,0,0,0.35);
+  --shadow-hover: 0 12px 26px rgba(0,0,0,0.45);
+}
+
+/* ===== Base ===== */
+*{ box-sizing: border-box; }
+body{
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* ===== Contenedor ===== */
+.container{
+  max-width: 1150px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* ===== Header ===== */
+header{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+header h1{
+  margin: 0;
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: .5px;
+  color: var(--primary);
+}
+
+/* ===== Búsqueda ===== */
+#search{
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.07);
+  color: var(--text);
+  font-size: 1rem;
+  transition: .2s ease;
+}
+#search:hover{
+  background: rgba(255,255,255,0.1);
+}
+#search:focus{
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0,245,255,0.2);
+}
+#search::placeholder{
+  color: var(--muted);
+}
+
+/* ===== Categorías ===== */
+#categoryNav{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 22px 0;
+}
+
+.nav-btn{
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  cursor: pointer;
+  color: var(--text);
+  transition: .2s ease;
+}
+.nav-btn:hover{
+  background: rgba(255,255,255,0.12);
+}
+.nav-btn.active{
+  background: rgba(0,245,255,0.18);
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 10px rgba(0,245,255,0.3);
+}
+
+/* ===== Grilla ===== */
+#products{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 22px;
+}
+
+/* ===== Tarjeta ===== */
+.card{
+  background: var(--bg-alt);
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: var(--shadow);
+  transition: transform .25s ease, box-shadow .25s ease;
+  cursor: pointer;
+  position: relative;
+  backdrop-filter: blur(6px);
+}
+
+/* Hover PRO */
+.card:hover{
+  transform: translateY(-6px) scale(1.015);
+  box-shadow: var(--shadow-hover);
+}
+
+/* Imagen */
+.card img{
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  background: #0a0f14;
+  transition: .3s ease;
+}
+.card:hover img{
+  filter: brightness(1.1) saturate(1.2);
+}
+
+/* Cuerpo */
+.card-body{
+  padding: 16px;
+}
+.card-body h3{
+  margin: 0 0 8px;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+.price{
+  color: var(--success);
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* Botón agregar */
+.add-btn{
+  margin-top: 14px;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: var(--primary);
+  color: #000;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: .95rem;
+  transition: .2s ease;
+}
+.add-btn:hover{
+  filter: brightness(1.15);
+  transform: translateY(-1px);
+}
+
+/* ===== Carrito flotante ===== */
+#cartToggle{
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  color: var(--text);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(6px);
+  transition: .2s ease;
+}
+#cartToggle:hover{
+  background: rgba(255,255,255,0.17);
+  transform: scale(1.05);
+}
+
+#cartCount{
+  background: var(--secondary);
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: .8rem;
+  font-weight: bold;
+}
+
+/* ===== Panel del carrito ===== */
+#cartPanel{
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  width: 360px;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(12px);
+  border-left: 1px solid rgba(255,255,255,0.12);
+  padding: 18px;
+  transform: translateX(100%);
+  transition: .3s ease;
+}
+#cartPanel.open{
+  transform: translateX(0);
+  box-shadow: -10px 0 25px rgba(0,0,0,0.4);
+}
+
+/* Items */
+.cart-item{
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.08);
+  margin-bottom: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Controles */
+.qty-btn,
+.remove-btn{
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  transition: .2s ease;
+}
+.qty-btn:hover,
+.remove-btn:hover{
+  background: rgba(255,255,255,0.17);
+}
+
+/* Botón pagar */
+#checkoutBtn{
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  background: var(--secondary);
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: .2s ease;
+}
+
+#checkoutBtn:hover{
+  filter: brightness(1.15);
+}

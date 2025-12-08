@@ -1,0 +1,98 @@
+ <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova Stark</title>
+
+  <!-- Archivo de estilos -->
+  <link rel="stylesheet" href="stiles.css" />
+
+  <!-- Buenas prácticas para íconos y SEO -->
+  <meta name="description" content="Tienda futurista Nova Stark — Catálogo sin servidor con carrito dinámico." />
+</head>
+
+<body>
+  <!-- Encabezado -->
+  <header class="site-header">
+    <h1 class="brand">Nova Stark</h1>
+
+    <!-- Navegación dinámica de categorías -->
+    <nav id="categoryNav" class="top-nav" aria-label="Categorías"></nav>
+
+    <!-- Acciones: búsqueda y carrito -->
+    <div class="actions">
+      <label for="search" class="visually-hidden">Buscar productos</label>
+      <input
+        id="search"
+        type="search"
+        placeholder="Buscar productos…"
+        aria-label="Buscar productos"
+        autocomplete="off"
+      />
+
+      <button
+        id="cartToggle"
+        class="cart-button"
+        aria-expanded="false"
+        aria-controls="cartPanel"
+      >
+        🛒 Carrito (<span id="cartCount">0</span>)
+      </button>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="container">
+    <div id="loader" class="loader" hidden>
+      Cargando productos...
+    </div>
+
+    <section id="products" class="grid" aria-live="polite"></section>
+  </main>
+
+  <!-- Panel lateral del carrito -->
+  <aside
+    id="cartPanel"
+    class="cart-panel"
+    aria-hidden="true"
+    tabindex="-1"
+  >
+    <div class="cart-header">
+      <h2>Tu carrito</h2>
+      <button id="closeCart" aria-label="Cerrar carrito">
+        ✕
+      </button>
+    </div>
+
+    <div id="cartItems" class="cart-items" role="list"></div>
+
+    <div class="cart-footer">
+      <div class="totals">
+        <span>Subtotal:</span>
+        <strong id="cartSubtotal">$0.00</strong>
+      </div>
+      <button id="checkoutBtn" class="primary">Pagar</button>
+    </div>
+  </aside>
+
+  <!-- Pie de página -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>✨ Tienda Demo — catálogo sin servidor</p>
+
+      <nav class="footer-links">
+        <a href="#">📜 Aviso de privacidad</a>
+        <a href="#">📧 Contáctanos</a>
+        <a href="#">ℹ️ Acerca del proyecto</a>
+      </nav>
+
+      <small>&copy; 2025 Nova Stark. Todos los derechos reservados.</small>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="catalogo.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
