@@ -1,0 +1,276 @@
+ /* ==========================================================
+   ✨ TIENDA VIRTUAL — MODO OSCURO FUNCIONAL
+========================================================== */
+
+/* ==========================================================
+   🌙 VARIABLES — MODO OSCURO (DEFAULT)
+========================================================== */
+:root {
+  --bg: #080b10;
+  --bg-alt: rgba(255,255,255,0.05);
+  --glass: rgba(255,255,255,0.10);
+  --glass-strong: rgba(255,255,255,0.18);
+
+  --text: #e8f1ff;
+  --muted: #9fb3c8;
+
+  --primary: #57d1d6;
+  --primary-glow: rgba(87,209,214,0.25);
+
+  --secondary: #8b6ce6;
+  --secondary-glow: rgba(139,108,230,0.28);
+
+  --danger: #ff6161;
+  --success: #22d48a;
+
+  --radius: 18px;
+  --radius-sm: 12px;
+
+  --shadow: 0 8px 20px rgba(0,0,0,0.45);
+  --shadow-hover: 0 12px 30px rgba(0,0,0,0.55);
+}
+
+/* ==========================================================
+   RESET + BASE
+========================================================== */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  padding-bottom: 100px;
+}
+
+/* Transiciones suaves */
+body,
+.site-header,
+.card,
+.nav-btn,
+.cart-box,
+.modal-content,
+#sortSelect {
+  transition:
+    background-color .35s ease,
+    color .35s ease,
+    border-color .35s ease,
+    box-shadow .35s ease;
+}
+
+/* ==========================================================
+   HEADER
+========================================================== */
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 22px;
+  background: rgba(255,255,255,0.03);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.brand {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-shadow: 0 0 12px var(--primary-glow);
+}
+
+/* ==========================================================
+   BUSCADOR
+========================================================== */
+#search {
+  width: 240px;
+  padding: 14px 18px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text);
+}
+
+#search::placeholder {
+  color: var(--muted);
+}
+
+#search:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 10px var(--primary-glow);
+}
+
+/* ==========================================================
+   ORDENAR POR PRECIO (ARRIBA)
+========================================================== */
+.sort-box {
+  padding: 0 18px;
+  margin: 22px 0 10px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+#sortSelect {
+  padding: 10px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--glass);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: var(--text);
+  backdrop-filter: blur(8px);
+  cursor: pointer;
+}
+
+/* ==========================================================
+   CATEGORÍAS
+========================================================== */
+#categoryNav {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 0 18px;
+  margin-bottom: 22px;
+}
+
+.nav-btn {
+  padding: 10px 18px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.nav-btn.active {
+  background: var(--primary-glow);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ==========================================================
+   PRODUCTOS
+========================================================== */
+#products {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  padding: 0 18px;
+}
+
+/* ==========================================================
+   CARD
+========================================================== */
+.card {
+  background: var(--glass);
+  border-radius: var(--radius);
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px);
+}
+
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: var(--shadow-hover);
+}
+
+.card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+}
+
+.card-body {
+  padding: 18px;
+}
+
+.price {
+  color: var(--success);
+  font-weight: bold;
+}
+
+/* ==========================================================
+   BOTONES CARD
+========================================================== */
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.add-btn {
+  flex: 1;
+  padding: 10px;
+  background: var(--primary);
+  color: #000;
+  font-weight: bold;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+.details-btn,
+.fav-btn {
+  background: rgba(255,255,255,0.12);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+}
+
+/* ==========================================================
+   MODALES Y CARRITO
+========================================================== */
+.modal,
+.cart-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-content,
+.cart-box {
+  background: var(--glass);
+  border-radius: var(--radius);
+  padding: 22px;
+  animation: zoomIn .25s ease;
+}
+
+@keyframes zoomIn {
+  from { transform: scale(.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* ==========================================================
+   🌞 VARIABLES — MODO CLARO
+========================================================== */
+body.light {
+  --bg: #f3f6ff;
+  --bg-alt: rgba(0,0,0,0.05);
+  --glass: rgba(255,255,255,0.75);
+  --glass-strong: rgba(255,255,255,0.95);
+
+  --text: #1a1d2b;
+  --muted: #4a5568;
+
+  --primary: #2c8cff;
+  --primary-glow: rgba(44,140,255,0.25);
+
+  --secondary: #9146ff;
+  --secondary-glow: rgba(145,70,255,0.30);
+
+  --success: #0ba765;
+
+  --shadow: 0 4px 14px rgba(0,0,0,0.15);
+  --shadow-hover: 0 8px 24px rgba(0,0,0,0.18);
+}
+
+/* Ajustes específicos modo claro */
+body.light .nav-btn {
+  background: rgba(0,0,0,0.08);
+  border-color: rgba(0,0,0,0.1);
+}

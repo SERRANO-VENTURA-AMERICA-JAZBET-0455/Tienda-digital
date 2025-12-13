@@ -1,0 +1,114 @@
+ <!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nova Stark</title>
+
+  <!-- Archivo de estilos -->
+  <link rel="stylesheet" href="stiles.css" />
+
+  <!-- Buenas prácticas para íconos y SEO -->
+  <meta name="description"
+    content="Tienda futurista Nova Stark — Catálogo sin servidor con carrito dinámico." />
+</head>
+
+<body>
+
+  <!-- BOTÓN PARA SALIR -->
+  <button id="logoutBtn" style="display:none;position:fixed;top:10px;right:10px;">Cerrar sesión</button>
+
+  <!-- CONTENEDOR REAL DE LA TIENDA -->
+  <div id="storeBox" style="display:none;"></div>
+
+  <!-- BOTÓN MODO OSCURO -->
+  <button id="themeToggle" class="theme-btn">🌙</button>
+
+  <!-- Encabezado -->
+  <header class="site-header">
+    <h1 class="brand">Nova Stark</h1>
+ <!-- SELECT PARA ORDENAR -->
+  <div class="sort-box">
+    <select id="sortSelect">
+      <option value="none">Ordenar...</option>
+      <option value="priceAsc">Precio: menor a mayor</option>
+      <option value="priceDesc">Precio: mayor a menor</option>
+      <option value="nameAsc">Nombre A→Z</option>
+      <option value="nameDesc">Nombre Z→A</option>
+    </select>
+  </div>
+    <!-- Navegación dinámica de categorías -->
+    <nav id="categoryNav" class="top-nav" aria-label="Categorías"></nav>
+
+    <!-- Acciones: búsqueda y carrito -->
+    <div class="actions">
+      <label for="search" class="visually-hidden">Buscar productos</label>
+      <input id="search" type="search" placeholder="Buscar productos…" aria-label="Buscar productos"
+        autocomplete="off" />
+
+      <button id="cartToggle" class="cart-button" aria-expanded="false" aria-controls="cartPanel">
+        🛒 Carrito (<span id="cartCount">0</span>)
+      </button>
+    </div>
+  </header>
+
+  <!-- MODAL DETALLES -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <button id="modalClose">×</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <main class="container">
+    <div id="loader" class="loader" hidden>
+      Cargando productos...
+    </div>
+
+    <section id="products" class="grid" aria-live="polite"></section>
+  </main>
+
+  <!-- Modal del Carrito -->
+  <div id="cartModal" class="modal cart-modal">
+    <div class="modal-content cart-box">
+      <button id="cartModalClose" class="close-btn">×</button>
+
+      <h2>Tu carrito</h2>
+
+      <div id="cartItems" class="cart-items" style="max-height:300px; overflow-y:auto;"></div>
+
+      <div class="cart-footer">
+        <div class="totals">
+          <span>Subtotal:</span>
+          <strong id="cartSubtotal">$0.00</strong>
+        </div>
+        <button id="checkoutBtn" class="primary">Pagar</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Pie de página -->
+  <footer class="site-footer">
+    <div class="footer-content">
+      <p>✨ Tienda Demo — catálogo sin servidor</p>
+
+      <nav class="footer-links">
+        <a href="https://www.gob.mx/aviso_de_privacidad">📜 Aviso de privacidad</a>
+        <a href="23328051370455@cetis155.edu.mx">📧 Contáctanos</a>
+        <a href="https://github.com/SERRANO-VENTURA-AMERICA-JAZBET-0455?tab=repositories">ℹ️ Acerca del proyecto</a>
+      </nav>
+
+      <small>&copy; 2025 Nova Stark. Todos los derechos reservados.</small>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="catalogo.js"></script>
+  <script src="app.js"></script>
+
+</body>
+
+</html>
